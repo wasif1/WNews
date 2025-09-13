@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.wasif.core"
+    namespace = "com.wasif.topheadlines"
     compileSdk = 36
 
     defaultConfig {
@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -50,6 +50,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(project(":core"))
+
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -60,10 +62,6 @@ dependencies {
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
-
-    implementation(libs.gson)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
 }

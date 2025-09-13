@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.wasif.core.presentation.ui.theme.WNewsTheme
+import com.wasif.topheadlines.presentation.ui.Greeting
+import com.wasif.topheadlines.presentation.ui.TopHeadlinesActivity
 
 
 class MainActivity : ComponentActivity() {
@@ -29,15 +32,20 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier.clickable {
+                startActivity(
+                    TopHeadlinesActivity.newIntent(this)
+                )
+            }
+        )
+    }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Preview(showBackground = true)
 @Composable

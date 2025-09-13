@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "WNews"
 include(":app")
 include(":core")
+include(":features:topHeadlines")
