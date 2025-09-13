@@ -1,4 +1,4 @@
-package com.wasif.news
+package com.wasif.news.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.wasif.news.ui.theme.WNewsTheme
+import com.wasif.core.presentation.ui.theme.WNewsTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
