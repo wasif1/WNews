@@ -1,4 +1,4 @@
-package com.wasif.news.di
+package com.wasif.core.di
 
 import javax.inject.Scope
 

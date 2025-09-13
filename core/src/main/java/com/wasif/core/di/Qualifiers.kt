@@ -1,4 +1,4 @@
-package com.wasif.newsapp.di
+package com.wasif.core.di
 
 import javax.inject.Qualifier
 
