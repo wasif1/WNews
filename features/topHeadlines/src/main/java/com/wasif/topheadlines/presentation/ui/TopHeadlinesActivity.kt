@@ -20,13 +20,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,15 +45,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import coil.compose.AsyncImage
 import com.wasif.core.NewsApplication
 import com.wasif.core.theme.WNewsTheme
+import com.wasif.core.utills.Extensions.openUrl
 import com.wasif.topheadlines.data.models.ArticlesItem
+import com.wasif.topheadlines.data.models.HeadlinesUiState
 import com.wasif.topheadlines.di.component.DaggerTopHeadlinesComponent
 import com.wasif.topheadlines.di.module.TopHeadlineModule
 import com.wasif.topheadlines.presentation.viewmodel.TopHeadlinesViewModel
-import com.wasif.topheadlines.data.models.HeadlinesUiState
 import javax.inject.Inject
-import coil.compose.AsyncImage
 
 
 class TopHeadlinesActivity : ComponentActivity() {
@@ -62,28 +70,38 @@ class TopHeadlinesActivity : ComponentActivity() {
 
     private val viewModel: TopHeadlinesViewModel by viewModels { viewModelFactory }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getDependencies()
-
-
         enableEdgeToEdge()
         setContent {
             WNewsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Top Headlines",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-
+                LaunchedEffect(Unit) {
+                    viewModel.fetchTopHeadlines()
+                }
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("Top Headlines") },
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowBack,
+                                        contentDescription = "Back"
+                                    )
+                                }
+                            }
+                        )
+                    }) { innerPadding ->
                     val uiState by viewModel.uiState.collectAsState()
                     HeadlinesScreen(
+                        modifier = Modifier.padding(innerPadding),
                         uiState = uiState,
                         onArticleClick = { article ->
-                            // TODO: navigate to detail screen or open browser
+                            this.openUrl(article.url ?: "")
                         }
                     )
-                    viewModel.fetchTopHeadlines()
                 }
             }
         }
@@ -99,21 +117,23 @@ class TopHeadlinesActivity : ComponentActivity() {
 
 @Composable
 fun HeadlinesScreen(
+    modifier: Modifier,
     uiState: HeadlinesUiState,
     onArticleClick: (ArticlesItem) -> Unit
 ) {
     when {
         uiState.isLoading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
         }
+
         uiState.error != null -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -123,9 +143,10 @@ fun HeadlinesScreen(
                 )
             }
         }
+
         else -> {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -193,18 +214,7 @@ fun ArticleItem(article: ArticlesItem, onClick: () -> Unit) {
 }
 
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    WNewsTheme {
-        Greeting("Top Headlines")
-    }
 }
