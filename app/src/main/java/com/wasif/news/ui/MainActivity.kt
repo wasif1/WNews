@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.wasif.core.presentation.ui.theme.WNewsTheme
+import com.wasif.core.theme.WNewsTheme
 import com.wasif.topheadlines.presentation.ui.Greeting
 import com.wasif.topheadlines.presentation.ui.TopHeadlinesActivity
 

@@ -1,4 +1,4 @@
-package com.wasif.core.data.models.topHeadlines
+package com.wasif.topheadlines.data.models
 
 import com.google.gson.annotations.SerializedName
 

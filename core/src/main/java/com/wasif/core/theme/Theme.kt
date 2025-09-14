@@ -1,4 +1,4 @@
-package com.wasif.core.presentation.ui.theme
+package com.wasif.core.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

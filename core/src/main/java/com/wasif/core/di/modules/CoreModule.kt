@@ -33,7 +33,6 @@ class CoreModule(private val application: NewsApplication) {
     fun provideOkHttpClient(loggingInterceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            // add other interceptors like headers/auth here
             .build()
     }
 
@@ -46,5 +45,4 @@ class CoreModule(private val application: NewsApplication) {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
 }

@@ -5,6 +5,7 @@ import com.wasif.core.NewsApplication
 import com.wasif.core.di.Qualifiers
 import com.wasif.core.di.modules.CoreModule
 import dagger.Component
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Singleton
@@ -14,4 +15,6 @@ interface CoreComponent {
 
     @Qualifiers.ApplicationContext
     fun applicationContext(): Context
+
+    fun getRetrofit(): Retrofit
 }
