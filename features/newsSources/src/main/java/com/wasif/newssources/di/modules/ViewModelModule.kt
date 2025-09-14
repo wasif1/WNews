@@ -1,10 +1,10 @@
-package com.wasif.topheadlines.di.module
+package com.wasif.newssources.di.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.wasif.core.di.Qualifiers
 import com.wasif.core.utills.ViewModelFactory
-import com.wasif.topheadlines.presentation.viewmodel.TopHeadlinesViewModel
+import com.wasif.newssources.presentation.viewmodel.NewsSourcesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -17,6 +17,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @Qualifiers.ViewModelKey(TopHeadlinesViewModel::class)
-    abstract fun bindTopHeadlinesViewModel(viewModel: TopHeadlinesViewModel): ViewModel
+    @Qualifiers.ViewModelKey(NewsSourcesViewModel::class)
+    abstract fun bindNewsSourcesViewModel(viewModel: NewsSourcesViewModel): ViewModel
 }

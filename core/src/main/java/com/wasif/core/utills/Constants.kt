@@ -6,5 +6,6 @@ class Constants {
         const val API_KEY = "127240ebd5c84ed693f7f5c0d5629af4"
         const val COUNTRY = "us"
         const val TOP_HEADLINES = "top-headlines"
+        const val NEWS_SOURCES = "top-headlines/sources"
     }
 }

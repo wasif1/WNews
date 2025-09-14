@@ -1,4 +1,4 @@
-package com.wasif.topheadlines.presentation.ui
+package com.wasif.newssources.presentation.ui
 
 import android.content.Context
 import android.content.Intent
@@ -38,37 +38,34 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import coil.compose.AsyncImage
 import com.wasif.core.NewsApplication
 import com.wasif.core.data.models.UiState
 import com.wasif.core.theme.WNewsTheme
 import com.wasif.core.utills.Extensions.openUrl
-import com.wasif.topheadlines.data.models.ArticlesItem
-import com.wasif.topheadlines.di.component.DaggerTopHeadlinesComponent
-import com.wasif.topheadlines.di.module.TopHeadlineModule
-import com.wasif.topheadlines.presentation.viewmodel.TopHeadlinesViewModel
+import com.wasif.newssources.data.models.SourcesItem
+import com.wasif.newssources.di.components.DaggerNewsSourcesComponent
+import com.wasif.newssources.di.modules.NewsSourcesModule
+import com.wasif.newssources.presentation.viewmodel.NewsSourcesViewModel
 import javax.inject.Inject
 
 
-class TopHeadlinesActivity : ComponentActivity() {
+class NewsSourcesActivity : ComponentActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, TopHeadlinesActivity::class.java)
+            return Intent(context, NewsSourcesActivity::class.java)
         }
     }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: TopHeadlinesViewModel by viewModels { viewModelFactory }
+    private val viewModel: NewsSourcesViewModel by viewModels { viewModelFactory }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,12 +75,12 @@ class TopHeadlinesActivity : ComponentActivity() {
         setContent {
             WNewsTheme {
                 LaunchedEffect(Unit) {
-                    viewModel.fetchTopHeadlines()
+                    viewModel.fetchNewsSources()
                 }
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Top Headlines") },
+                            title = { Text("News Sources") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(
@@ -95,11 +92,11 @@ class TopHeadlinesActivity : ComponentActivity() {
                         )
                     }) { innerPadding ->
                     val uiState by viewModel.uiState.collectAsState()
-                    HeadlinesScreen(
+                    NewSourcesScreen(
                         modifier = Modifier.padding(innerPadding),
                         uiState = uiState,
-                        onArticleClick = { article ->
-                            this.openUrl(article.url ?: "")
+                        onArticleClick = { source ->
+                            this.openUrl(source.url ?: "")
                         }
                     )
                 }
@@ -108,18 +105,18 @@ class TopHeadlinesActivity : ComponentActivity() {
     }
 
     private fun getDependencies() {
-        DaggerTopHeadlinesComponent.builder()
+        DaggerNewsSourcesComponent.builder()
             .coreComponent((application as NewsApplication).coreComponent)
-            .topHeadlineModule(TopHeadlineModule(this))
+            .newsSourcesModule(NewsSourcesModule(this))
             .build().inject(this)
     }
 }
 
 @Composable
-fun HeadlinesScreen(
+fun NewSourcesScreen(
     modifier: Modifier,
-    uiState: UiState<List<ArticlesItem>>,
-    onArticleClick: (ArticlesItem) -> Unit
+    uiState: UiState<List<SourcesItem>>,
+    onArticleClick: (SourcesItem) -> Unit
 ) {
     when {
         uiState.isLoading -> {
@@ -137,7 +134,7 @@ fun HeadlinesScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = uiState.error ?: "An unknown error occurred",
+                    text = uiState.error ?: "Unknown Error",
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -151,7 +148,7 @@ fun HeadlinesScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(uiState.data ?: emptyList()) { article ->
-                    ArticleItem(article, onClick = { onArticleClick(article) })
+                    SourcesItem(article, onClick = { onArticleClick(article) })
                 }
             }
         }
@@ -160,7 +157,7 @@ fun HeadlinesScreen(
 
 
 @Composable
-fun ArticleItem(article: ArticlesItem, onClick: () -> Unit) {
+fun SourcesItem(article: SourcesItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,21 +170,11 @@ fun ArticleItem(article: ArticlesItem, onClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            article.urlToImage?.let { imageUrl ->
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = article.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = article.title ?: "No Title",
+                text = article.name ?: "No Title",
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -195,20 +182,6 @@ fun ArticleItem(article: ArticlesItem, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = article.description ?: "No description",
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = "By ${article.author ?: "Unknown"} • ${article.publishedAt ?: ""}",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray
-            )
         }
     }
 }

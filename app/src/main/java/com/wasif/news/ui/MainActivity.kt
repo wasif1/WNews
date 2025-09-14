@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wasif.core.theme.WNewsTheme
 import com.wasif.core.utills.Extensions.showToast
+import com.wasif.newssources.presentation.ui.NewsSourcesActivity
 import com.wasif.topheadlines.presentation.ui.TopHeadlinesActivity
 
 
@@ -102,6 +103,10 @@ class MainActivity : ComponentActivity() {
                     when (name) {
                         "Top Headlines" -> startActivity(
                             TopHeadlinesActivity.newIntent(this)
+                        )
+
+                        "News Sources" -> startActivity(
+                            NewsSourcesActivity.newIntent(this)
                         )
 
                         else -> {

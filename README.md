@@ -3,22 +3,37 @@
 # Android News App
 A simple Android news application built using Kotlin and Jetpack Compose. The app fetches news articles from a public API and displays them in a user-friendly interface.
 
-# Programming Language: Kotlin
+# Programming Language
+## Kotlin
 
 ## Technologies Stack
 
 - ✅ Jetpack Compose 
+  - ✅ LaunchEffect
+  - ✅ TopAppBar
+  - ✅ Scaffold
+  - ✅ LazyColumn
+  - ✅ Coil for image loading
+  - ✅ TextField
+  - ⏳ SwipeRefresh
 - ✅ Raw Dagger
-- ✅ Retrofit + OkHTTP
+- ✅ Retrofit + OkHTTP for network requests
 - ✅ Modular Architecture
 - ✅ MVVM + Clean Architecture
-- ✅ Flow Api
+- ✅ Coroutines, Flow, StateFlow
+- ⏳ Flow Operators
+- ⏳ Room Database
+- ⏳ ViewBinding
+- ⏳ Unit Tests
+  - ⏳ Good test coverage
+  - ⏳ Unit tests and UI tests
+  - ⏳ Mockito for mocking objects
 
 ## Features 
 
-- ⏳ Home Screen
+- ✅ Home Screen
 - ✅ Top Headlines
-- ⏳ News Sources
+- ✅ News Sources
 - ⏳ Countries
 - ⏳ Languages
 - ⏳ Search
