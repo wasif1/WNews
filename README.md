@@ -4,7 +4,7 @@
 A simple Android news application built using Kotlin and Jetpack Compose. The app fetches news articles from a public API and displays them in a user-friendly interface.
 
 # Programming Language
-## Kotlin
+Kotlin
 
 ## Technologies Stack
 
@@ -23,7 +23,7 @@ A simple Android news application built using Kotlin and Jetpack Compose. The ap
 - ✅ Coroutines, Flow, StateFlow
 - ⏳ Flow Operators
 - ⏳ Room Database
-- ⏳ ViewBinding
+- ✅ DataBinding
 - ⏳ Unit Tests
   - ⏳ Good test coverage
   - ⏳ Unit tests and UI tests
