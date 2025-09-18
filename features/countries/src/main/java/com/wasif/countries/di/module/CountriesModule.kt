@@ -1,11 +1,9 @@
 package com.wasif.countries.di.module
 
-import com.wasif.core.di.Scopes
+import android.content.Context
 import com.wasif.countries.data.network.CountriesApiService
-import com.wasif.countries.data.repository.CountryRepositoryImp
-import com.wasif.countries.data.repository.sources.DataSource
-import com.wasif.countries.data.repository.sources.LocalJsonDataImp
-import com.wasif.countries.data.repository.sources.NetworkDataImp
+import com.wasif.countries.domain.repository.CountryRepository
+import com.wasif.countries.domain.usecase.GetCountriesUseCase
 import com.wasif.countries.presentation.ui.CountriesActivity
 import dagger.Module
 import dagger.Provides
@@ -18,29 +16,16 @@ class CountriesModule(private val activity: CountriesActivity) {
     fun provideActivity(): CountriesActivity = activity
 
     @Provides
-    @Scopes.ActivityScope
+    fun provideContext(): Context = activity.baseContext
+
+    @Provides
     fun provideCountriesApiService(retrofit: Retrofit): CountriesApiService {
         return retrofit.create(CountriesApiService::class.java)
     }
 
     @Provides
-    @Scopes.ActivityScope
-    fun provideCountriesLocalJson(): LocalJsonDataImp {
-        return LocalJsonDataImp()
-    }
-
-    @Provides
-    @Scopes.ActivityScope
-    fun provideNetworkDataImp(countriesApiService: CountriesApiService): NetworkDataImp {
-        return NetworkDataImp(countriesApiService)
-    }
-
-    @Provides
-    @Scopes.ActivityScope
-    fun provideCountryRepository(
-        dataSources: Set<@JvmSuppressWildcards DataSource>
-    ): CountryRepositoryImp {
-        return CountryRepositoryImp(dataSources)
+    fun provideGetCountriesUseCase(countryRepository: CountryRepository): GetCountriesUseCase {
+        return GetCountriesUseCase(countryRepository)
     }
 
 }

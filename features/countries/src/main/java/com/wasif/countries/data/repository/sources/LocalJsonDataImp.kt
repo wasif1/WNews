@@ -1,8 +1,13 @@
 package com.wasif.countries.data.repository.sources
 
+import android.content.Context
 import com.wasif.countries.data.models.Country
+import javax.inject.Inject
 
-class LocalJsonDataImp : DataSource {
+
+class LocalJsonDataImp @Inject constructor(
+    private val context: Context
+) : DataSource {
     override suspend fun getCountries(): List<Country> {
         return listOf(
             Country("United States", "US"),
