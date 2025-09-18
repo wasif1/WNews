@@ -1,24 +1,33 @@
 package com.wasif.countries.data.repository
 
 import com.wasif.core.di.Scopes
+import com.wasif.core.utills.Resource
 import com.wasif.countries.data.models.Country
 import com.wasif.countries.data.repository.sources.DataSource
 import com.wasif.countries.domain.repository.CountryRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-@Scopes.ActivityScope
 class CountryRepositoryImp @Inject constructor(
     private val dataSources: Set<@JvmSuppressWildcards DataSource>
 ) : CountryRepository {
 
-    override suspend fun getCountries(): List<Country> {
-        return dataSources
-            .sortedBy { it.priority() } // JSON -> DB -> API
+    override suspend fun getCountries(): Flow<Resource<List<Country>>> = flow {
+        emit(Resource.Loading)
+
+        val result = dataSources
+            .sortedBy { it.priority() }
             .firstNotNullOfOrNull { source ->
                 runCatching { source.getCountries() }
                     .getOrNull()
                     ?.takeIf { it.isNotEmpty() }
-            } ?: emptyList()
-    }
+            }
 
+        if (result != null) {
+            emit(Resource.Success(result))
+        } else {
+            emit(Resource.Error("No data available"))
+        }
+    }
 }
