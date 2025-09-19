@@ -6,23 +6,51 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.wasif.core.NewsApplication
+import com.wasif.core.data.models.UiState
 import com.wasif.core.theme.WNewsTheme
+import com.wasif.languages.data.models.Language
 import com.wasif.languages.di.components.DaggerLanguageComponent
 import com.wasif.languages.di.modules.LanguageModule
+import com.wasif.languages.presentation.viewmodel.LanguagesViewModel
+import javax.inject.Inject
 
 
 class LanguagesActivity : ComponentActivity() {
@@ -33,10 +61,10 @@ class LanguagesActivity : ComponentActivity() {
         }
     }
 
-//    @Inject
-//    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-//    private val viewModel: NewsSourcesViewModel by viewModels { viewModelFactory }
+    private val viewModel: LanguagesViewModel by viewModels { viewModelFactory }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +74,7 @@ class LanguagesActivity : ComponentActivity() {
         setContent {
             WNewsTheme {
                 LaunchedEffect(Unit) {
-//                    viewModel.fetchNewsSources()
+                    viewModel.fetchLanguages()
                 }
                 Scaffold(
                     topBar = {
@@ -62,15 +90,15 @@ class LanguagesActivity : ComponentActivity() {
                             }
                         )
                     }) { innerPadding ->
-                    Text("Hello", modifier = Modifier.padding(innerPadding))
-//                    val uiState by viewModel.uiState.collectAsState()
-//                    NewSourcesScreen(
-//                        modifier = Modifier.padding(innerPadding),
-//                        uiState = uiState,
-//                        onArticleClick = { source ->
-//                            this.openUrl(source.url ?: "")
-//                        }
-//                    )
+
+                    val uiState by viewModel.uiState.collectAsState()
+                    LanguagesScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        uiState = uiState,
+                        onLanguageClick = { source ->
+
+                        }
+                    )
                 }
             }
         }
@@ -84,79 +112,79 @@ class LanguagesActivity : ComponentActivity() {
     }
 }
 
-//@Composable
-//fun NewSourcesScreen(
-//    modifier: Modifier,
-//    uiState: UiState<List<SourcesItem>>,
-//    onArticleClick: (SourcesItem) -> Unit
-//) {
-//    when {
-//        uiState.isLoading -> {
-//            Box(
-//                modifier = modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator()
-//            }
-//        }
-//
-//        uiState.error != null -> {
-//            Box(
-//                modifier = modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    text = uiState.error ?: "Unknown Error",
-//                    color = Color.Red,
-//                    style = MaterialTheme.typography.bodyLarge
-//                )
-//            }
-//        }
-//
-//        else -> {
-//            LazyColumn(
-//                modifier = modifier.fillMaxSize(),
-//                contentPadding = PaddingValues(8.dp),
-//                verticalArrangement = Arrangement.spacedBy(8.dp)
-//            ) {
-//                items(uiState.data ?: emptyList()) { article ->
-//                    SourcesItem(article, onClick = { onArticleClick(article) })
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//
-//@Composable
-//fun SourcesItem(article: SourcesItem, onClick: () -> Unit) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clickable { onClick() },
-//        elevation = CardDefaults.cardElevation(4.dp),
-//        shape = RoundedCornerShape(12.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(12.dp)
-//        ) {
-//
-//            Spacer(modifier = Modifier.height(4.dp))
-//
-//            Text(
-//                text = article.name ?: "No Title",
-//                style = MaterialTheme.typography.titleMedium,
-//                maxLines = 2,
-//                overflow = TextOverflow.Ellipsis
-//            )
-//
-//            Spacer(modifier = Modifier.height(4.dp))
-//
-//        }
-//    }
-//}
+@Composable
+fun LanguagesScreen(
+    modifier: Modifier,
+    uiState: UiState<List<Language>>,
+    onLanguageClick: (Language) -> Unit
+) {
+    when {
+        uiState.isLoading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        uiState.error != null -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = uiState.error ?: "Unknown Error",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiState.data ?: emptyList()) { article ->
+                    LanguageItem(article, onClick = { onLanguageClick(article) })
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun LanguageItem(lang: Language, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = lang.name ?: "No Title",
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+        }
+    }
+}
 
 
 @Preview(showBackground = true)
