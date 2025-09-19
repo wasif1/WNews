@@ -95,7 +95,7 @@ class CountriesActivity : ComponentActivity() {
                     CountriesScreen(
                         modifier = Modifier.padding(innerPadding),
                         uiState = uiState,
-                        onArticleClick = { source ->
+                        onCountryClick = { source ->
 
                         }
                     )
@@ -116,7 +116,7 @@ class CountriesActivity : ComponentActivity() {
 fun CountriesScreen(
     modifier: Modifier,
     uiState: UiState<List<Country>>,
-    onArticleClick: (Country) -> Unit
+    onCountryClick: (Country) -> Unit
 ) {
     when {
         uiState.isLoading -> {
@@ -148,7 +148,7 @@ fun CountriesScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(uiState.data ?: emptyList()) { article ->
-                    SourcesItem(article, onClick = { onArticleClick(article) })
+                    SourcesItem(article, onClick = { onCountryClick(article) })
                 }
             }
         }
