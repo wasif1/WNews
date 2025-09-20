@@ -50,6 +50,7 @@ import com.wasif.countries.data.models.Country
 import com.wasif.countries.di.component.DaggerCountriesComponent
 import com.wasif.countries.di.module.CountriesModule
 import com.wasif.countries.presentation.viewmodel.CountriesViewModel
+import com.wasif.topheadlines.presentation.ui.TopHeadlinesActivity
 import javax.inject.Inject
 
 
@@ -95,8 +96,10 @@ class CountriesActivity : ComponentActivity() {
                     CountriesScreen(
                         modifier = Modifier.padding(innerPadding),
                         uiState = uiState,
-                        onCountryClick = { source ->
-
+                        onClick = { country ->
+                            TopHeadlinesActivity.newIntent(this, country.code?.lowercase()).also {
+                                startActivity(it)
+                            }
                         }
                     )
                 }
@@ -116,7 +119,7 @@ class CountriesActivity : ComponentActivity() {
 fun CountriesScreen(
     modifier: Modifier,
     uiState: UiState<List<Country>>,
-    onCountryClick: (Country) -> Unit
+    onClick: (Country) -> Unit
 ) {
     when {
         uiState.isLoading -> {
@@ -147,8 +150,8 @@ fun CountriesScreen(
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(uiState.data ?: emptyList()) { article ->
-                    SourcesItem(article, onClick = { onCountryClick(article) })
+                items(uiState.data ?: emptyList()) { data ->
+                    SourcesItem(data, onClick = { onClick(data) })
                 }
             }
         }

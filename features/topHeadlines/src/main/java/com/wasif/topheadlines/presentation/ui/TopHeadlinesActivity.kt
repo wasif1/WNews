@@ -49,6 +49,7 @@ import coil.compose.AsyncImage
 import com.wasif.core.NewsApplication
 import com.wasif.core.data.models.UiState
 import com.wasif.core.theme.WNewsTheme
+import com.wasif.core.utills.Constants.Companion.COUNTRY
 import com.wasif.core.utills.Extensions.openUrl
 import com.wasif.topheadlines.data.models.ArticlesItem
 import com.wasif.topheadlines.di.component.DaggerTopHeadlinesComponent
@@ -60,8 +61,10 @@ import javax.inject.Inject
 class TopHeadlinesActivity : ComponentActivity() {
 
     companion object {
-        fun newIntent(context: Context): Intent {
-            return Intent(context, TopHeadlinesActivity::class.java)
+        fun newIntent(context: Context, code: String? = null): Intent {
+            return Intent(context, TopHeadlinesActivity::class.java).apply {
+                putExtra("code", code)
+            }
         }
     }
 
@@ -74,11 +77,12 @@ class TopHeadlinesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getDependencies()
+        val code = intent.getStringExtra("code") ?: COUNTRY
         enableEdgeToEdge()
         setContent {
             WNewsTheme {
                 LaunchedEffect(Unit) {
-                    viewModel.fetchTopHeadlines()
+                    viewModel.fetchTopHeadlines(code)
                 }
                 Scaffold(
                     topBar = {

@@ -50,6 +50,7 @@ import com.wasif.languages.data.models.Language
 import com.wasif.languages.di.components.DaggerLanguageComponent
 import com.wasif.languages.di.modules.LanguageModule
 import com.wasif.languages.presentation.viewmodel.LanguagesViewModel
+import com.wasif.topheadlines.presentation.ui.TopHeadlinesActivity
 import javax.inject.Inject
 
 
@@ -95,8 +96,10 @@ class LanguagesActivity : ComponentActivity() {
                     LanguagesScreen(
                         modifier = Modifier.padding(innerPadding),
                         uiState = uiState,
-                        onLanguageClick = { source ->
-
+                        onLanguageClick = { data ->
+                            TopHeadlinesActivity.newIntent(this, data.code?.lowercase()).also {
+                                startActivity(it)
+                            }
                         }
                     )
                 }
@@ -147,8 +150,8 @@ fun LanguagesScreen(
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(uiState.data ?: emptyList()) { article ->
-                    LanguageItem(article, onClick = { onLanguageClick(article) })
+                items(uiState.data ?: emptyList()) { data ->
+                    LanguageItem(data, onClick = { onLanguageClick(data) })
                 }
             }
         }
