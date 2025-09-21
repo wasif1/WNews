@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.wasif.languages"
+    namespace = "com.wasif.search"
     compileSdk = 36
 
     defaultConfig {
@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

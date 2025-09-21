@@ -11,7 +11,7 @@ import javax.inject.Inject
 class TopHeadlinesUseCase @Inject constructor(
     private val repository: TopHeadlinesRepository
 ) {
-    operator fun invoke(): Flow<Resource<TopHeadlines>> {
-        return repository.getTopHeadlines()
+    operator fun invoke(code: String): Flow<Resource<TopHeadlines>> {
+        return repository.getTopHeadlines(code)
     }
 }

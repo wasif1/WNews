@@ -1,23 +1,23 @@
-package com.wasif.topheadlines.data.repository
+package com.wasif.search.data.repository
 
 import com.wasif.core.di.Scopes
 import com.wasif.core.utills.Constants.Companion.API_KEY
 import com.wasif.core.utills.Resource
-import com.wasif.topheadlines.data.models.TopHeadlines
-import com.wasif.topheadlines.data.network.TopHeadlineApiService
+import com.wasif.search.data.models.SearchModel
+import com.wasif.search.data.network.SearchApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @Scopes.ActivityScope
-class TopHeadlinesRepository @Inject constructor(
-    private val topHeadlineApiService: TopHeadlineApiService
+class SearchRepository @Inject constructor(
+    private val searchApiService: SearchApiService
 ) {
-    fun getTopHeadlines(code: String): Flow<Resource<TopHeadlines>> = flow {
+    fun getNewsSources(query: String): Flow<Resource<SearchModel>> = flow {
         try {
             emit(Resource.Loading)
             val response =
-                topHeadlineApiService.getTopHeadlines(country = code, apiKey = API_KEY)
+                searchApiService.getSearch(query = query, apiKey = API_KEY)
             emit(Resource.Success(response))
         } catch (e: Exception) {
             emit(Resource.Error(e.message ?: "An unexpected error occurred"))

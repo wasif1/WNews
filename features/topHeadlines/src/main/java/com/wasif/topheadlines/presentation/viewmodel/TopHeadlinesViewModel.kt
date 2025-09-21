@@ -21,9 +21,9 @@ class TopHeadlinesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState<List<ArticlesItem>>())
     val uiState: StateFlow<UiState<List<ArticlesItem>>> = _uiState.asStateFlow()
 
-    fun fetchTopHeadlines() {
+    fun fetchTopHeadlines(code: String) {
         viewModelScope.launch {
-            topHeadlinesUseCase().collect { resource ->
+            topHeadlinesUseCase(code).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                         _uiState.value = _uiState.value.copy(

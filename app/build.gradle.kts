@@ -76,4 +76,5 @@ dependencies {
     implementation(project(":features:newsSources"))
     implementation(project(":features:countries"))
     implementation(project(":features:languages"))
+    implementation(project(":features:search"))
 }

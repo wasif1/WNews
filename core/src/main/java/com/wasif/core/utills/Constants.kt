@@ -7,5 +7,6 @@ class Constants {
         const val COUNTRY = "us"
         const val TOP_HEADLINES = "top-headlines"
         const val NEWS_SOURCES = "top-headlines/sources"
+        const val SEARCH = "everything"
     }
 }
