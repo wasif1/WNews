@@ -26,6 +26,7 @@ import com.wasif.core.utills.Extensions.showToast
 import com.wasif.countries.presentation.ui.CountriesActivity
 import com.wasif.languages.presentation.ui.LanguagesActivity
 import com.wasif.newssources.presentation.ui.NewsSourcesActivity
+import com.wasif.search.presentation.ui.SearchActivity
 import com.wasif.topheadlines.presentation.ui.TopHeadlinesActivity
 
 
@@ -117,6 +118,10 @@ class MainActivity : ComponentActivity() {
 
                         "Languages" -> startActivity(
                             LanguagesActivity.newIntent(this)
+                        )
+
+                        "Search" -> startActivity(
+                            SearchActivity.newIntent(this)
                         )
 
                         else -> {

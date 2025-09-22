@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SearchUseCase @Inject constructor(
     private val repository: SearchRepository
 ) {
-    suspend operator fun invoke(query: String): Flow<Resource<List<SearchModel>>> {
+    operator fun invoke(query: String): Flow<Resource<SearchModel>> {
         return repository.getSearch(query)
     }
 }
