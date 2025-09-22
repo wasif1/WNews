@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,10 +18,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import com.wasif.core.NewsApplication
 import com.wasif.core.theme.WNewsTheme
 import com.wasif.search.di.component.DaggerSearchComponent
 import com.wasif.search.di.module.SearchModule
+import com.wasif.search.presentation.viewmodel.SearchViewModel
+import javax.inject.Inject
 
 
 class SearchActivity : ComponentActivity() {
@@ -31,10 +35,10 @@ class SearchActivity : ComponentActivity() {
         }
     }
 
-//    @Inject
-//    lateinit var viewModelFactory: ViewModelProvider.Factory
-//
-//    private val viewModel: LanguagesViewModel by viewModels { viewModelFactory }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: SearchViewModel by viewModels { viewModelFactory }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {

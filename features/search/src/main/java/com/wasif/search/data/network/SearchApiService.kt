@@ -11,6 +11,6 @@ interface SearchApiService {
     suspend fun getSearch(
         @Query("apiKey") apiKey: String,
         @Query("q") query: String,
-    ): SearchModel
+    ): List<SearchModel>
 
 }

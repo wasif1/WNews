@@ -13,7 +13,7 @@ import javax.inject.Inject
 class SearchRepository @Inject constructor(
     private val searchApiService: SearchApiService
 ) {
-    fun getNewsSources(query: String): Flow<Resource<SearchModel>> = flow {
+    fun getSearch(query: String): Flow<Resource<List<SearchModel>>> = flow {
         try {
             emit(Resource.Loading)
             val response =
