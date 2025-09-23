@@ -2,15 +2,19 @@ package com.wasif.search.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wasif.core.data.models.UiState
 import com.wasif.core.di.Scopes
 import com.wasif.core.utills.Resource
 import com.wasif.search.data.models.SearchModel
 import com.wasif.search.domain.usecases.SearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @Scopes.ActivityScope
@@ -18,36 +22,23 @@ class SearchViewModel @Inject constructor(
     private val countriesUseCase: SearchUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState<List<SearchModel>>())
-    val uiState: StateFlow<UiState<List<SearchModel>>> = _uiState.asStateFlow()
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
 
-    fun fetchSearchResult(query: String) {
-        viewModelScope.launch {
-            countriesUseCase(query).collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = true,
-                            error = null
-                        )
-                    }
+    val searchResults: StateFlow<Resource<SearchModel>> =
+        _query
+            .debounce(500)
+            .filter { it.isNotEmpty() }
+            .distinctUntilChanged()
+            .flatMapLatest { q ->
+                countriesUseCase(q)
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.Lazily,
+                Resource.Loading
+            )
 
-                    is Resource.Success -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            data = resource.data,
-                            error = null
-                        )
-                    }
-
-                    is Resource.Error -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = resource.message
-                        )
-                    }
-                }
-            }
-        }
+    fun onQueryChange(newQuery: String) {
+        _query.value = newQuery
     }
 }
