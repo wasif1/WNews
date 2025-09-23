@@ -50,6 +50,7 @@ class TopHeadlinesViewModelTest {
         topHeadlinesViewModel.fetchTopHeadlines(COUNTRY)
 
         topHeadlinesViewModel.uiState.test {
+
             val state = awaitItem()
             assert(state.data == mockArticles && !state.isLoading && state.error == null)
         }
