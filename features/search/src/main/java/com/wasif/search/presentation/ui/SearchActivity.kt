@@ -8,9 +8,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,7 +40,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +79,7 @@ class SearchActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Languages") },
+                            title = { Text("Search") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(
@@ -100,6 +104,7 @@ class SearchActivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun M3SearchBar(viewModel: SearchViewModel, innerPadding: PaddingValues) {
@@ -107,70 +112,89 @@ fun M3SearchBar(viewModel: SearchViewModel, innerPadding: PaddingValues) {
     val results by viewModel.searchResults.collectAsState()
     var active by remember { mutableStateOf(false) }
 
-    SearchBar(
-        query = query,
-        onQueryChange = { viewModel.onQueryChange(it) },
-        onSearch = { active = false },
-        active = active,
-        onActiveChange = { active = it },
-        placeholder = { Text("Search...") },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-        trailingIcon = {
-            if (active) {
-                IconButton(onClick = { viewModel.onQueryChange("") }) {
-                    Icon(Icons.Default.Close, contentDescription = "Clear")
+
+    Box(
+        modifier = Modifier.padding(innerPadding)
+    ) {
+        SearchBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+            query = query,
+            onQueryChange = { viewModel.onQueryChange(it) },
+            onSearch = { active = false },
+            active = active,
+            onActiveChange = { active = it },
+            placeholder = { Text("Search...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (active) {
+                    IconButton(onClick = {
+                        active = false
+                        viewModel.onQueryChange("")
+                    }) {
+                        Icon(Icons.Default.Close, contentDescription = "Clear")
+                    }
                 }
             }
-        },
-        modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxWidth()
-            .padding(5.dp)
-    ) {
-        when (val result = results) {
-            is Resource.Loading -> CircularProgressIndicator()
-            is Resource.Success -> {
-                LazyColumn {
-                    result.data.articles?.let {
-                        items(it) { item ->
+        ) {
+            when (val result = results) {
+                is Resource.Loading ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (query.isNotEmpty())
+                            CircularProgressIndicator()
+                    }
 
-                            Card(
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .fillMaxWidth()
-                                    .clickable {
+                is Resource.Success -> {
+                    LazyColumn {
+                        result.data.articles?.let {
+                            items(it) { item ->
 
-                                    },
-                                elevation = CardDefaults.cardElevation(4.dp),
-                                shape = RoundedCornerShape(12.dp)
-                            ) {
-                                Column(
+                                Card(
                                     modifier = Modifier
+                                        .padding(5.dp)
                                         .fillMaxWidth()
-                                        .padding(12.dp)
-                                ) {
+                                        .clickable {
 
-                                    Spacer(modifier = Modifier.height(4.dp))
-
-                                    Text(
-                                        text = item?.title ?: "No Title",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis
+                                        },
+                                    elevation = CardDefaults.cardElevation(4.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color.White
                                     )
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(12.dp)
+                                    ) {
 
-                                    Spacer(modifier = Modifier.height(4.dp))
+                                        Spacer(modifier = Modifier.height(4.dp))
 
+                                        Text(
+                                            text = item?.title ?: "No Title",
+                                            style = MaterialTheme.typography.titleMedium,
+                                            maxLines = 2,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Spacer(modifier = Modifier.height(4.dp))
+
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            is Resource.Error -> Text("Error: ${result.message}")
+                is Resource.Error -> Text("Error: ${result.message}")
+            }
         }
     }
+
 }
 
 @Preview(showBackground = true)
