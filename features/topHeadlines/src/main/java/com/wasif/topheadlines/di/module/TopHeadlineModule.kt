@@ -2,6 +2,8 @@ package com.wasif.topheadlines.di.module
 
 import android.app.Activity
 import com.wasif.core.di.Scopes
+import com.wasif.core.utills.dispatcher.DefaultDispatcher
+import com.wasif.core.utills.dispatcher.DispatcherProvider
 import com.wasif.topheadlines.data.network.TopHeadlineApiService
 import com.wasif.topheadlines.data.repository.TopHeadlinesRepository
 import com.wasif.topheadlines.domain.TopHeadlinesUseCase
@@ -40,8 +42,13 @@ class TopHeadlineModule(private val activity: TopHeadlinesActivity) {
     }
 
     @Provides
+    fun provideDefaultDispatcher(): DispatcherProvider {
+        return DefaultDispatcher()
+    }
+
+    @Provides
     @Scopes.ActivityScope
     fun provideTopHeadlinesViewModel(retrofit: Retrofit): TopHeadlinesViewModel {
-        return TopHeadlinesViewModel(provideTopHeadlinesUseCase(retrofit))
+        return TopHeadlinesViewModel(provideTopHeadlinesUseCase(retrofit), provideDefaultDispatcher())
     }
 }
