@@ -26,7 +26,7 @@ class TopHeadlinesViewModelTest {
     @Mock
     lateinit var topHeadlinesUseCase: TopHeadlinesUseCase
 
-    lateinit var dispatcher: TestDefaultDispatcher
+    private lateinit var dispatcher: TestDefaultDispatcher
 
     @Before
     fun setup() {
@@ -36,9 +36,7 @@ class TopHeadlinesViewModelTest {
     @Test
     fun fetchTopHeadlines_callUseCase_LoadingResult() = runTest {
 
-        doReturn(flowOf(Resource.Loading))
-            .`when`(topHeadlinesUseCase)
-            .invoke(COUNTRY)
+        doReturn(flowOf(Resource.Loading)).`when`(topHeadlinesUseCase).invoke(COUNTRY)
 
         val topHeadlinesViewModel = TopHeadlinesViewModel(topHeadlinesUseCase, dispatcher)
         topHeadlinesViewModel.fetchTopHeadlines(COUNTRY)
@@ -51,14 +49,27 @@ class TopHeadlinesViewModelTest {
     @Test
     fun fetchTopHeadlines_callUseCase_successResult() = runTest {
 
-        doReturn(flowOf(UiState(isLoading = false, data = mockResponse, error = null)))
-            .`when`(topHeadlinesUseCase)
-            .invoke(COUNTRY)
+        doReturn(flowOf(Resource.Success(mockResponse))).`when`(topHeadlinesUseCase).invoke(COUNTRY)
 
         val topHeadlinesViewModel = TopHeadlinesViewModel(topHeadlinesUseCase, dispatcher)
         topHeadlinesViewModel.fetchTopHeadlines(COUNTRY)
         topHeadlinesViewModel.uiState.test {
-            assertEquals(awaitItem(), UiState(isLoading = false, data = mockResponse, error = null))
+            assertEquals(
+                UiState(isLoading = false, data = mockResponse.articles, error = null), awaitItem()
+            )
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun fetchTopHeadlines_callUseCase_ErrorResult() = runTest {
+        val errorMessage = "Network Error"
+        doReturn(flowOf(Resource.Error(errorMessage))).`when`(topHeadlinesUseCase).invoke(COUNTRY)
+
+        val topHeadlinesViewModel = TopHeadlinesViewModel(topHeadlinesUseCase, dispatcher)
+        topHeadlinesViewModel.fetchTopHeadlines(COUNTRY)
+        topHeadlinesViewModel.uiState.test {
+            assertEquals(UiState(isLoading = false, data = null, error = errorMessage), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }

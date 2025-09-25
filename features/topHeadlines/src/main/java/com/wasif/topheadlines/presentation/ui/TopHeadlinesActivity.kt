@@ -81,9 +81,9 @@ class TopHeadlinesActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WNewsTheme {
-                LaunchedEffect(Unit) {
-                    viewModel.fetchTopHeadlines(code)
-                }
+
+                viewModel.fetchTopHeadlines(code)
+
                 Scaffold(
                     topBar = {
                         TopAppBar(

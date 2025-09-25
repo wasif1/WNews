@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.wasif.core.data.models.UiState
 import com.wasif.core.di.Scopes
 import com.wasif.core.utills.Resource
-import com.wasif.core.utills.dispatcher.DefaultDispatcher
 import com.wasif.core.utills.dispatcher.DispatcherProvider
 import com.wasif.topheadlines.data.models.ArticlesItem
 import com.wasif.topheadlines.domain.TopHeadlinesUseCase
