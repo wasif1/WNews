@@ -2,6 +2,7 @@ package com.wasif.topheadlines.presentation.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,11 +38,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +59,7 @@ import com.wasif.core.data.models.UiState
 import com.wasif.core.theme.WNewsTheme
 import com.wasif.core.utills.Constants.Companion.COUNTRY
 import com.wasif.core.utills.Extensions.openUrl
+import com.wasif.topheadlines.R
 import com.wasif.topheadlines.data.models.ArticlesItem
 import com.wasif.topheadlines.di.component.DaggerTopHeadlinesComponent
 import com.wasif.topheadlines.di.module.TopHeadlineModule
@@ -82,7 +91,9 @@ class TopHeadlinesActivity : ComponentActivity() {
         setContent {
             WNewsTheme {
 
-                viewModel.fetchTopHeadlines(code)
+                LaunchedEffect(Unit) {
+                    viewModel.fetchTopHeadlines(code)
+                }
 
                 Scaffold(
                     topBar = {
@@ -131,7 +142,12 @@ fun HeadlinesScreen(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                val loading = stringResource(id = R.string.loading)
+                CircularProgressIndicator(
+                    modifier = Modifier.semantics {
+                        contentDescription = loading // This will help accessibility services and testing frameworks
+                    }
+                )
             }
         }
 
