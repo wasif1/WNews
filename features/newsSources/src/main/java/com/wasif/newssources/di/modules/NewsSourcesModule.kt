@@ -1,6 +1,8 @@
 package com.wasif.newssources.di.modules
 
 import com.wasif.core.di.Scopes
+import com.wasif.core.utills.dispatcher.DefaultDispatcher
+import com.wasif.core.utills.dispatcher.DispatcherProvider
 import com.wasif.newssources.data.network.NewsSourcesApiService
 import com.wasif.newssources.data.repository.NewsSourcesRepository
 import com.wasif.newssources.domain.NewsSourcesUseCase
@@ -38,6 +40,6 @@ class NewsSourcesModule(private val activity: NewsSourcesActivity) {
     @Provides
     @Scopes.ActivityScope
     fun provideNewsSourcesViewModel(retrofit: Retrofit) : NewsSourcesViewModel {
-        return NewsSourcesViewModel(provideNewsSourcesUseCase(retrofit))
+        return NewsSourcesViewModel(provideNewsSourcesUseCase(retrofit), DefaultDispatcher())
     }
 }
