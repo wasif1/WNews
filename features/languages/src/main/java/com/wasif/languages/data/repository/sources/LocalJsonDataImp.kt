@@ -1,13 +1,10 @@
 package com.wasif.languages.data.repository.sources
 
-import android.content.Context
 import com.wasif.languages.data.models.Language
 import javax.inject.Inject
 
 
-class LocalLanguageDataImp @Inject constructor(
-    private val context: Context
-) : DataSource {
+class LocalLanguageDataImp @Inject constructor() : DataSource {
     override suspend fun getLanguages(): List<Language> {
         return listOf(
             Language("English", "US"),

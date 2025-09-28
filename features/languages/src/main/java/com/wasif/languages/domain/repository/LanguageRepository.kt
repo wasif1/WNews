@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 @Scopes.ActivityScope
 interface LanguageRepository {
-    suspend fun getLanguages(): Flow<Resource<List<Language>>>
+    fun getLanguages(): Flow<Resource<List<Language>>>
 }

@@ -12,7 +12,7 @@ class LanguageRepositoryImp @Inject constructor(
     private val dataSources: Set<@JvmSuppressWildcards DataSource>
 ) : LanguageRepository {
 
-    override suspend fun getLanguages(): Flow<Resource<List<Language>>> = flow {
+    override fun getLanguages(): Flow<Resource<List<Language>>> = flow {
         emit(Resource.Loading)
 
         val result = dataSources.sortedBy { it.priority() }.firstNotNullOfOrNull { source ->
