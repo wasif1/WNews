@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.wasif.core.data.models.UiState
 import com.wasif.core.di.Scopes
 import com.wasif.core.utills.Resource
+import com.wasif.core.utills.dispatcher.DefaultDispatcher
+import com.wasif.core.utills.dispatcher.DispatcherProvider
 import com.wasif.newssources.data.models.SourcesItem
 import com.wasif.newssources.domain.NewsSourcesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,14 +17,15 @@ import javax.inject.Inject
 
 @Scopes.ActivityScope
 class NewsSourcesViewModel @Inject constructor(
-    private val newsSourcesUseCase: NewsSourcesUseCase
+    private val newsSourcesUseCase: NewsSourcesUseCase,
+    private val defaultDispatcher: DispatcherProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState<List<SourcesItem>>())
     val uiState: StateFlow<UiState<List<SourcesItem>>> = _uiState.asStateFlow()
 
     fun fetchNewsSources() {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher.main()) {
             newsSourcesUseCase().collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
