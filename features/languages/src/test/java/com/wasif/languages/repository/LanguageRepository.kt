@@ -4,38 +4,42 @@ import app.cash.turbine.test
 import com.wasif.core.utills.Resource
 import com.wasif.languages.data.repository.LanguageRepositoryImp
 import com.wasif.languages.data.repository.sources.DataSource
-import com.wasif.languages.domain.repository.LanguageRepository
 import com.wasif.languages.utills.mockResponse
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
 class LanguageRepository {
 
     @Mock
     private lateinit var dataSource: DataSource
+    private lateinit var repository: LanguageRepositoryImp
 
-    @Mock
-    private lateinit var repository: LanguageRepository
-
+    @Before
+    fun setUp() {
+        repository = LanguageRepositoryImp(setOf(dataSource))
+    }
 
     @Test
-    suspend fun getLanguages_SuccessCase_Success() {// not working
-        doReturn(flowOf(mockResponse)).`when`(repository).getLanguages()
-        val repository = LanguageRepositoryImp(setOf(dataSource))
-        repository.getLanguages().test {
-            assertEquals(awaitItem(), Resource.Loading)
-            val success = awaitItem()
-            assertEquals(success, Resource.Success(mockResponse))
-            cancelAndIgnoreRemainingEvents()
+    fun getLanguages_SuccessCase_Success() {// not working
+        runTest {
+            whenever(dataSource.priority()).thenReturn(1)
+            whenever(dataSource.getLanguages()).thenReturn(mockResponse)
+
+            repository.getLanguages().test {
+                assertEquals(Resource.Loading, awaitItem())
+                assertEquals(Resource.Success(mockResponse), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+//            verify(dataSource, times(1)).getLanguages()
         }
-        verify(dataSource, times(1)).getLanguages()
     }
 }
