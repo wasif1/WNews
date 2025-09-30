@@ -9,7 +9,7 @@ import javax.inject.Inject
 class LanguagesUseCase @Inject constructor(
     private val repository: LanguageRepository
 ) {
-    suspend operator fun invoke(): Flow<Resource<List<Language>>> {
+    operator fun invoke(): Flow<Resource<List<Language>>> {
         return repository.getLanguages()
     }
 }
