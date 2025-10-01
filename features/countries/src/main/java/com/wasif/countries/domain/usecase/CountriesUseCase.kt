@@ -6,10 +6,10 @@ import com.wasif.countries.domain.repository.CountryRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetCountriesUseCase @Inject constructor(
+class CountriesUseCase @Inject constructor(
     private val repository: CountryRepository
 ) {
-    suspend operator fun invoke(): Flow<Resource<List<Country>>> {
+    operator fun invoke(): Flow<Resource<List<Country>>> {
         return repository.getCountries()
     }
 }

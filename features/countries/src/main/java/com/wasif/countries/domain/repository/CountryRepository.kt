@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 @Scopes.ActivityScope
 interface CountryRepository {
-    suspend fun getCountries(): Flow<Resource<List<Country>>>
+    fun getCountries(): Flow<Resource<List<Country>>>
 }

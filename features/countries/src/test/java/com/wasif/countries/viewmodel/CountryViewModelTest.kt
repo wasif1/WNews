@@ -1,12 +1,12 @@
-package com.wasif.languages.viewmodel
+package com.wasif.countries.viewmodel
 
 import app.cash.turbine.test
 import com.wasif.core.data.models.UiState
 import com.wasif.core.utills.Resource
-import com.wasif.languages.domain.usecase.LanguagesUseCase
-import com.wasif.languages.presentation.viewmodel.LanguagesViewModel
+import com.wasif.countries.domain.usecase.CountriesUseCase
+import com.wasif.countries.presentation.viewmodel.CountriesViewModel
 import com.wasif.languages.utills.TestDefaultDispatcher
-import com.wasif.languages.utills.mockResponse
+import com.wasif.countries.utills.mockResponse
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -20,51 +20,51 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
-class ViewModelTest {
+class CountryViewModelTest {
 
     @Mock
-    private lateinit var useCase: LanguagesUseCase
-    private lateinit var testDispatcher: TestDefaultDispatcher
+    lateinit var countryUseCase: CountriesUseCase
+    lateinit var testDispatcher: TestDefaultDispatcher
 
     @Before
-    fun setup() {
+    fun setUp() {
         testDispatcher = TestDefaultDispatcher()
     }
 
     @Test
-    fun fetchLanguages_LoadingCase_Loading() = runTest {
-        doReturn(flowOf(Resource.Loading)).`when`(useCase).invoke()
-        val viewModel = LanguagesViewModel(useCase, testDispatcher)
-        viewModel.fetchLanguages()
+    fun fetchCountries_caseLoading() = runTest {
+        doReturn(flowOf(Resource.Loading)).`when`(countryUseCase).invoke()
+        val viewModel = CountriesViewModel(countryUseCase, testDispatcher)
+        viewModel.fetchCountries()
         viewModel.uiState.test {
             assertEquals(UiState(isLoading = true, data = null, error = null), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
-        verify(useCase, times(1)).invoke()
+        verify(countryUseCase, times(1)).invoke()
     }
 
     @Test
-    fun fetchLanguages_SuccessCase_Success() = runTest {
-        doReturn(flowOf(Resource.Success(mockResponse))).`when`(useCase).invoke()
-        val viewModel = LanguagesViewModel(useCase, testDispatcher)
-        viewModel.fetchLanguages()
+    fun fetchCountries_caseSuccess() = runTest {
+        doReturn(flowOf(Resource.Success(mockResponse))).`when`(countryUseCase).invoke()
+        val viewModel = CountriesViewModel(countryUseCase, testDispatcher)
+        viewModel.fetchCountries()
         viewModel.uiState.test {
             assertEquals(UiState(isLoading = false, data = mockResponse, error = null), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
-        verify(useCase, times(1)).invoke()
+        verify(countryUseCase, times(1)).invoke()
     }
 
     @Test
-    fun fetchLanguages_FailureCase_Failure() = runTest {
+    fun fetchCountries_caseFailure() = runTest {
         val errorMessage = "Error occurred"
-        doReturn(flowOf(Resource.Error(errorMessage))).`when`(useCase).invoke()
-        val viewModel = LanguagesViewModel(useCase, testDispatcher)
-        viewModel.fetchLanguages()
+        doReturn(flowOf(Resource.Error(errorMessage))).`when`(countryUseCase).invoke()
+        val viewModel = CountriesViewModel(countryUseCase, testDispatcher)
+        viewModel.fetchCountries()
         viewModel.uiState.test {
             assertEquals(UiState(isLoading = false, data = null, error = errorMessage), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
-        verify(useCase, times(1)).invoke()
+        verify(countryUseCase, times(1)).invoke()
     }
 }

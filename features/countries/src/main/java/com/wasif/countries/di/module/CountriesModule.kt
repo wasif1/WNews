@@ -1,9 +1,11 @@
 package com.wasif.countries.di.module
 
 import android.content.Context
+import com.wasif.core.utills.dispatcher.DefaultDispatcher
+import com.wasif.core.utills.dispatcher.DispatcherProvider
 import com.wasif.countries.data.network.CountriesApiService
 import com.wasif.countries.domain.repository.CountryRepository
-import com.wasif.countries.domain.usecase.GetCountriesUseCase
+import com.wasif.countries.domain.usecase.CountriesUseCase
 import com.wasif.countries.presentation.ui.CountriesActivity
 import dagger.Module
 import dagger.Provides
@@ -24,8 +26,13 @@ class CountriesModule(private val activity: CountriesActivity) {
     }
 
     @Provides
-    fun provideGetCountriesUseCase(countryRepository: CountryRepository): GetCountriesUseCase {
-        return GetCountriesUseCase(countryRepository)
+    fun provideGetCountriesUseCase(countryRepository: CountryRepository): CountriesUseCase {
+        return CountriesUseCase(countryRepository)
+    }
+
+    @Provides
+    fun provideDefaultDispatcher(): DispatcherProvider {
+        return DefaultDispatcher()
     }
 
 }

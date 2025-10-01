@@ -1,6 +1,5 @@
 package com.wasif.countries.data.repository
 
-import com.wasif.core.di.Scopes
 import com.wasif.core.utills.Resource
 import com.wasif.countries.data.models.Country
 import com.wasif.countries.data.repository.sources.DataSource
@@ -13,7 +12,7 @@ class CountryRepositoryImp @Inject constructor(
     private val dataSources: Set<@JvmSuppressWildcards DataSource>
 ) : CountryRepository {
 
-    override suspend fun getCountries(): Flow<Resource<List<Country>>> = flow {
+    override fun getCountries(): Flow<Resource<List<Country>>> = flow {
         emit(Resource.Loading)
 
         val result = dataSources
