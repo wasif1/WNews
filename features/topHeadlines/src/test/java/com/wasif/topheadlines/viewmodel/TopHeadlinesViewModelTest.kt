@@ -18,6 +18,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -41,9 +43,10 @@ class TopHeadlinesViewModelTest {
         val topHeadlinesViewModel = TopHeadlinesViewModel(topHeadlinesUseCase, dispatcher)
         topHeadlinesViewModel.fetchTopHeadlines(COUNTRY)
         topHeadlinesViewModel.uiState.test {
-            assertEquals(awaitItem(), UiState(isLoading = true, data = null, error = null))
+            assertEquals(UiState(isLoading = true, data = null, error = null), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
+        verify(topHeadlinesUseCase, times(1)).invoke(COUNTRY)
     }
 
     @Test
@@ -59,6 +62,7 @@ class TopHeadlinesViewModelTest {
             )
             cancelAndIgnoreRemainingEvents()
         }
+        verify(topHeadlinesUseCase, times(1)).invoke(COUNTRY)
     }
 
     @Test
@@ -72,5 +76,6 @@ class TopHeadlinesViewModelTest {
             assertEquals(UiState(isLoading = false, data = null, error = errorMessage), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
+        verify(topHeadlinesUseCase, times(1)).invoke(COUNTRY)
     }
 }
