@@ -21,19 +21,19 @@ Kotlin
 - ✅ Modular Architecture
 - ✅ MVVM + Clean Architecture
 - ✅ Coroutines, Flow, StateFlow
-- ⏳ Flow Operators
+- ✅ Flow Operators
 - ⏳ Room Database
 - ✅ DataBinding
-- ⏳ Unit Tests
-  - ⏳ Good test coverage
-  - ⏳ Unit tests and UI tests
-  - ⏳ Mockito for mocking objects
+- ✅ Unit Tests
+  - ✅ Good test coverage
+  - ✅ Unit tests and UI tests
+  - ✅ Mockito for mocking objects
 
 ## Features 
 
 - ✅ Home Screen
 - ✅ Top Headlines
 - ✅ News Sources
-- ⏳ Countries
-- ⏳ Languages
-- ⏳ Search
+- ✅ Countries
+- ✅ Languages
+- ✅ Search
