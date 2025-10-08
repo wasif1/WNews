@@ -28,6 +28,8 @@ Kotlin
   - ✅ Good test coverage
   - ✅ Unit tests and UI tests
   - ✅ Mockito for mocking objects
+- ⏳ Android KeyStore Api to store API keys securely
+- ⏳ CI/CD with GitHub Actions
 
 ## Features 
 
